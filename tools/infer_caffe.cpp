@@ -239,7 +239,7 @@ int main(int argc, const char **argv)
                 probmap = prob_net->infer(image);
                 std::cout << "processed " << std::endl;
                 
-                server.Send(probmap.data(), (int)sizeof(float)*probmap.total()*probmap.channels());
+                server.Send(probmap.ptr(), (int)sizeof(float)*probmap.total()*probmap.channels());
             }
         
         server.Close();
