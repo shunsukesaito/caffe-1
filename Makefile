@@ -29,19 +29,19 @@ DYNAMIC_NAME := $(LIB_BUILD_DIR)/lib$(PROJECT).so
 # Get all source files
 ##############################
 # CXX_SRCS are the source files excluding the test ones.
-CXX_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cpp" -name "*.cpp")
+#CXX_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cpp" -name "*.cpp")
 # CU_SRCS are the cuda source files
-CU_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cu" -name "*.cu")
+#CU_SRCS := $(shell find src/$(PROJECT) ! -name "test_*.cu" -name "*.cu")
 # TEST_SRCS are the test source files
-TEST_MAIN_SRC := src/$(PROJECT)/test/test_caffe_main.cpp
-TEST_SRCS := $(shell find src/$(PROJECT) -name "test_*.cpp")
-TEST_SRCS := $(filter-out $(TEST_MAIN_SRC), $(TEST_SRCS))
-TEST_CU_SRCS := $(shell find src/$(PROJECT) -name "test_*.cu")
-GTEST_SRC := src/gtest/gtest-all.cpp
+#TEST_MAIN_SRC := src/$(PROJECT)/test/test_caffe_main.cpp
+#TEST_SRCS := $(shell find src/$(PROJECT) -name "test_*.cpp")
+#TEST_SRCS := $(filter-out $(TEST_MAIN_SRC), $(TEST_SRCS))
+#TEST_CU_SRCS := $(shell find src/$(PROJECT) -name "test_*.cu")
+#GTEST_SRC := src/gtest/gtest-all.cpp
 # TOOL_SRCS are the source files for the tool binaries
 TOOL_SRCS := $(shell find tools -name "*.cpp")
 # EXAMPLE_SRCS are the source files for the example binaries
-EXAMPLE_SRCS := $(shell find examples -name "*.cpp")
+#EXAMPLE_SRCS := $(shell find examples -name "*.cpp")
 # BUILD_INCLUDE_DIR contains any generated header files we want to include.
 BUILD_INCLUDE_DIR := $(BUILD_DIR)/src
 # PROTO_SRCS are the protocol buffer definitions
@@ -101,32 +101,32 @@ OBJS := $(PROTO_OBJS) $(CXX_OBJS) $(CU_OBJS)
 # tool, example, and test objects
 TOOL_OBJS := $(addprefix $(BUILD_DIR)/, ${TOOL_SRCS:.cpp=.o})
 TOOL_BUILD_DIR := $(BUILD_DIR)/tools
-TEST_CXX_BUILD_DIR := $(BUILD_DIR)/src/$(PROJECT)/test
-TEST_CU_BUILD_DIR := $(BUILD_DIR)/cuda/src/$(PROJECT)/test
-TEST_CXX_OBJS := $(addprefix $(BUILD_DIR)/, ${TEST_SRCS:.cpp=.o})
-TEST_CU_OBJS := $(addprefix $(BUILD_DIR)/cuda/, ${TEST_CU_SRCS:.cu=.o})
-TEST_OBJS := $(TEST_CXX_OBJS) $(TEST_CU_OBJS)
-GTEST_OBJ := $(addprefix $(BUILD_DIR)/, ${GTEST_SRC:.cpp=.o})
-EXAMPLE_OBJS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=.o})
+#TEST_CXX_BUILD_DIR := $(BUILD_DIR)/src/$(PROJECT)/test
+#TEST_CU_BUILD_DIR := $(BUILD_DIR)/cuda/src/$(PROJECT)/test
+#TEST_CXX_OBJS := $(addprefix $(BUILD_DIR)/, ${TEST_SRCS:.cpp=.o})
+#TEST_CU_OBJS := $(addprefix $(BUILD_DIR)/cuda/, ${TEST_CU_SRCS:.cu=.o})
+#TEST_OBJS := $(TEST_CXX_OBJS) $(TEST_CU_OBJS)
+#GTEST_OBJ := $(addprefix $(BUILD_DIR)/, ${GTEST_SRC:.cpp=.o})
+#EXAMPLE_OBJS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=.o})
 # Output files for automatic dependency generation
 DEPS := ${CXX_OBJS:.o=.d} ${CU_OBJS:.o=.d} ${TEST_CXX_OBJS:.o=.d} \
 	${TEST_CU_OBJS:.o=.d}
 # tool, example, and test bins
 TOOL_BINS := ${TOOL_OBJS:.o=.bin}
-EXAMPLE_BINS := ${EXAMPLE_OBJS:.o=.bin}
+#EXAMPLE_BINS := ${EXAMPLE_OBJS:.o=.bin}
 # symlinks to tool bins without the ".bin" extension
 TOOL_BIN_LINKS := ${TOOL_BINS:.bin=}
 # Put the test binaries in build/test for convenience.
-TEST_BIN_DIR := $(BUILD_DIR)/test
-TEST_CU_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
-		$(foreach obj,$(TEST_CU_OBJS),$(basename $(notdir $(obj))))))
-TEST_CXX_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
-		$(foreach obj,$(TEST_CXX_OBJS),$(basename $(notdir $(obj))))))
-TEST_BINS := $(TEST_CXX_BINS) $(TEST_CU_BINS)
+#TEST_BIN_DIR := $(BUILD_DIR)/test
+#TEST_CU_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
+#		$(foreach obj,$(TEST_CU_OBJS),$(basename $(notdir $(obj))))))
+#TEST_CXX_BINS := $(addsuffix .testbin,$(addprefix $(TEST_BIN_DIR)/, \
+#		$(foreach obj,$(TEST_CXX_OBJS),$(basename $(notdir $(obj))))))
+#TEST_BINS := $(TEST_CXX_BINS) $(TEST_CU_BINS)
 # TEST_ALL_BIN is the test binary that links caffe statically.
-TEST_ALL_BIN := $(TEST_BIN_DIR)/test_all.testbin
+#TEST_ALL_BIN := $(TEST_BIN_DIR)/test_all.testbin
 # TEST_ALL_DYNINK_BIN is the test binary that links caffe as a dynamic library.
-TEST_ALL_DYNLINK_BIN := $(TEST_BIN_DIR)/test_all_dynamic_link.testbin
+#TEST_ALL_DYNLINK_BIN := $(TEST_BIN_DIR)/test_all_dynamic_link.testbin
 
 ##############################
 # Derive compiler warning dump locations
@@ -135,9 +135,9 @@ WARNS_EXT := warnings.txt
 CXX_WARNS := $(addprefix $(BUILD_DIR)/, ${CXX_SRCS:.cpp=.o.$(WARNS_EXT)})
 CU_WARNS := $(addprefix $(BUILD_DIR)/cuda/, ${CU_SRCS:.cu=.o.$(WARNS_EXT)})
 TOOL_WARNS := $(addprefix $(BUILD_DIR)/, ${TOOL_SRCS:.cpp=.o.$(WARNS_EXT)})
-EXAMPLE_WARNS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=.o.$(WARNS_EXT)})
-TEST_WARNS := $(addprefix $(BUILD_DIR)/, ${TEST_SRCS:.cpp=.o.$(WARNS_EXT)})
-TEST_CU_WARNS := $(addprefix $(BUILD_DIR)/cuda/, ${TEST_CU_SRCS:.cu=.o.$(WARNS_EXT)})
+#EXAMPLE_WARNS := $(addprefix $(BUILD_DIR)/, ${EXAMPLE_SRCS:.cpp=.o.$(WARNS_EXT)})
+#TEST_WARNS := $(addprefix $(BUILD_DIR)/, ${TEST_SRCS:.cpp=.o.$(WARNS_EXT)})
+#TEST_CU_WARNS := $(addprefix $(BUILD_DIR)/cuda/, ${TEST_CU_SRCS:.cu=.o.$(WARNS_EXT)})
 ALL_CXX_WARNS := $(CXX_WARNS) $(TOOL_WARNS) $(EXAMPLE_WARNS) $(TEST_WARNS)
 ALL_CU_WARNS := $(CU_WARNS) $(TEST_CU_WARNS)
 ALL_WARNS := $(ALL_CXX_WARNS) $(ALL_CU_WARNS)
