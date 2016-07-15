@@ -21,8 +21,8 @@
 #include <caffe/caffe.hpp>
 #include <opencv2/opencv.hpp>
 
-#define DEFAULT_DEPLOY_PATH "fafaf.prototxt"
-#define DEFAULT_WEIGHT_PATH "cafaa.caffemodel"
+#define DEFAULT_DEPLOY_PATH "deloy.prototxt"
+#define DEFAULT_WEIGHT_PATH "weight.caffemodel"
 using namespace caffe;
 using namespace cv;
 using namespace std;
@@ -207,13 +207,26 @@ int main(int argc, const char **argv)
 {
     std::vector<std::string> args(argv, argv + argc);
     int n = 1;
-    std::string ip = "192.168.0.18";
-    int gpu = 0;
+    std::string ip = "127.0.0.1";
+    std::string deploy_path = DEFAULT_DEPLOY_PATH;
+    std::string weight_path = DEFAULT_WEIGHT_PATH;
+    
+    int gpu = -1;
     while ( n < argc )
     {
         if ( args[n] == "-ip" )
         {
             ip = args[n+1];
+            n += 2;
+        }
+        else if( args[n] == "-d")
+        {
+            deploy_path = args[n+1];
+            n += 2;
+        }
+        else if(args[n] == "-w")
+        {
+            weight_path = args[n+1];
             n += 2;
         }
         else if( args[n] == "-g" )
@@ -227,7 +240,7 @@ int main(int argc, const char **argv)
         }
     }
     
-    SegNet* prob_net = new SegNet();
+    SegNet* prob_net = new SegNet(deploy_path,weight_path,(gpu<0)?"cpu":"gpu",gpu);
     
     cv::Mat image(128,128,CV_8UC3);
     cv::Mat probmap(128,128,CV_8UC3);
