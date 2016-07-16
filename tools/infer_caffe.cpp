@@ -243,17 +243,19 @@ int main(int argc, const char **argv)
     SegNet* prob_net = new SegNet(deploy_path,weight_path,(gpu<0)?"cpu":"gpu",gpu);
     
     cv::Mat image(128,128,CV_8UC3);
-    cv::Mat probmap(128,128,CV_8UC3);
+    cv::Mat probmap(128,128,CV_32FC1);
     while(1)
     {
         TCPServer server(ip.c_str(),1153);
-        if(server.Wait(60))
+        if(server.Wait(10)){
             if(server.RcvImage(image.ptr(),(int)image.total()*image.channels())){
                 probmap = prob_net->infer(image);
                 std::cout << "processed " << std::endl;
                 
                 server.Send(probmap.ptr(), (int)sizeof(float)*probmap.total()*probmap.channels());
+                std::cout << "sent image" << std::endl;
             }
+        }
         
         server.Close();
     }
