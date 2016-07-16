@@ -209,6 +209,7 @@ int main(int argc, const char **argv)
     std::vector<std::string> args(argv, argv + argc);
     int n = 1;
     std::string ip = "127.0.0.1";
+    int port = 1153;
     std::string deploy_path = DEFAULT_DEPLOY_PATH;
     std::string weight_path = DEFAULT_WEIGHT_PATH;
     
@@ -218,6 +219,11 @@ int main(int argc, const char **argv)
         if ( args[n] == "-ip" )
         {
             ip = args[n+1];
+            n += 2;
+        }
+        else if ( args[n] == "-p" )
+        {
+            ip = atoi(args[n+1].c_str());
             n += 2;
         }
         else if( args[n] == "-d")
@@ -247,7 +253,7 @@ int main(int argc, const char **argv)
     cv::Mat probmap(128,128,CV_32FC1);
     while(1)
     {
-        TCPServer server(ip.c_str(),1153);
+        TCPServer server(ip.c_str(),port);
         if(server.Wait(10)){
             if(server.RcvImage(image.ptr(),(int)image.total()*image.channels())){
                 probmap = prob_net->infer(image);
