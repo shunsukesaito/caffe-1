@@ -62,7 +62,6 @@ public:
         clock_t start_ = clock();
         do{
             newfd_ = accept(fd_, (struct sockaddr *) &cliaddr_, &clilen_);
-            std::cout << clock()-start_ << " " << CLOCKS_PER_SEC*max_wait << std::endl;
             if(clock()-start_ > CLOCKS_PER_SEC*max_wait){
                 std::cout << "Error: Client Session Timeout" << std::endl;
                 return false;
@@ -257,6 +256,8 @@ int main(int argc, const char **argv)
         if(server.Wait(10)){
             if(server.RcvImage(image.ptr(),(int)image.total()*image.channels())){
                 probmap = prob_net->infer(image);
+                
+                std::cout << probmap << std::endl;
                 std::cout << "processed " << std::endl;
                 
                 server.Send(probmap.ptr(), (int)sizeof(float)*probmap.total()*probmap.channels());
