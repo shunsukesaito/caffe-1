@@ -62,6 +62,7 @@ public:
         clock_t start_ = clock();
         do{
             newfd_ = accept(fd_, (struct sockaddr *) &cliaddr_, &clilen_);
+            std::cout << clock()-start_ << " " << CLOCKS_PER_SEC*max_wait << std::endl;
             if(clock()-start_ > CLOCKS_PER_SEC*max_wait){
                 std::cout << "Error: Client Session Timeout" << std::endl;
                 return false;
