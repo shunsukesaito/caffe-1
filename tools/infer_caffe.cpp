@@ -201,7 +201,7 @@ public:
         
         // return the result as Mat
         const vector< boost::shared_ptr< Blob< float > > > net_blobs = net.blobs();
-        boost::shared_ptr< Blob< float > > softmax_blob = net_blobs[ 0 ];
+        boost::shared_ptr< Blob< float > > softmax_blob = net_blobs[ net_blobs.size()-1 ];
         
         // TODO: check if this is truly the softmax blob
         
@@ -210,7 +210,7 @@ public:
         int height   = softmax_blob->height();
         int width    = softmax_blob->width();
         
-        cv::Mat pmap( height, width, CV_32FC1, softmax_blob->mutable_cpu_data()+width*height );
+        cv::Mat pmap( height, width, CV_32FC1, softmax_blob->mutable_cpu_data() );
         
         return pmap;
     }
