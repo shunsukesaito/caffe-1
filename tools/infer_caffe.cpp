@@ -6,6 +6,7 @@
 #include <string>
 #include <memory>
 
+#include <sys/ioctl.h>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <stdlib.h>
@@ -15,6 +16,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
+#include <pthread.h>
+#include <time.h>
 
 #include <time.h>
 
@@ -38,7 +41,20 @@ public:
         if ((fd_ = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             perror("cannot create socket");
         }
-        
+        int enable = 1;
+        if (setsockopt(fd_, SOL_SOCKET, SO_REUSEADDR, &enable, sizeof(int)) < 0)
+            perror("setsockopt(SO_REUSEADDR) failed");
+        int flags;
+#if defined(O_NONBLOCK)
+        /* Fixme: O_NONBLOCK is defined but broken on SunOS 4.1.x and AIX 3.2.5. */
+        if (-1 == (flags = fcntl(fd, F_GETFL, 0)))
+            flags = 0;
+        fcntl(fd_, F_SETFL, flags | O_NONBLOCK);
+#else
+        /* Otherwise, use the old way of doing it */
+        flags = 1;
+        ioctl(fd_, FIONBIO, &flags);
+#endif
         /* fill in the server's address and data */
         std::cout << "Setting Host..." << std::endl;
         memset((char*)&servaddr_, 0, sizeof(servaddr_));
@@ -49,6 +65,10 @@ public:
         if (::bind(fd_, (struct sockaddr *)&servaddr_, sizeof(servaddr_)) < 0) {
             perror("bind failed");
         }
+        
+        int true_val = 1;
+        setsockopt(fd_,SOL_SOCKET,SO_REUSEADDR,&true_val,sizeof(int));
+        setsockopt(newfd_,SOL_SOCKET,SO_REUSEADDR,&true_val,sizeof(int));
     }
 
     ~TCPServer(){close(newfd_); close(fd_);}
@@ -87,13 +107,15 @@ public:
     {
         int rcvd_size = 0;
         
+        start_idle_ = clock();
         while(rcvd_size < buffer_size){
             int n = read(newfd_,data+rcvd_size,buffer_size-rcvd_size);
             if (n < 0){
-                if( errno == EAGAIN){
-                    continue;
-                }
                 perror("ERROR reading from socket");
+                return false;
+            }
+            else if(clock() - start_idle_ > CLOCKS_PER_SEC*2){
+                std::cout << "Disconnected..." << std::endl;
                 return false;
             }
             
@@ -109,6 +131,7 @@ public:
     
 private:
     int fd_, newfd_;
+    clock_t start_idle_ = 0.0;
     struct sockaddr_in cliaddr_;
     struct sockaddr_in servaddr_;
     socklen_t clilen_;
