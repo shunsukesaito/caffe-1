@@ -178,7 +178,7 @@ public:
         
         // return the result as Mat
         const vector< boost::shared_ptr< Blob< float > > > net_blobs = net.blobs();
-        boost::shared_ptr< Blob< float > > softmax_blob = net_blobs[ net_blobs.size()-1 ];
+        boost::shared_ptr< Blob< float > > softmax_blob = net_blobs[ 0 ];
         
         // TODO: check if this is truly the softmax blob
         
@@ -257,7 +257,6 @@ int main(int argc, const char **argv)
             if(server.RcvImage(image.ptr(),(int)image.total()*image.channels())){
                 probmap = prob_net->infer(image);
                 
-                std::cout << probmap << std::endl;
                 std::cout << "processed " << std::endl;
                 
                 server.Send(probmap.ptr(), (int)sizeof(float)*probmap.total()*probmap.channels());
