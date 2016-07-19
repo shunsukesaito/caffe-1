@@ -1,0 +1,1 @@
+./build/tools/infer_caffe -d model/deploy.prototxt -w model/weight.caffemodel -ip 127.0.0.1
