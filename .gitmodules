@@ -1,0 +1,3 @@
+[submodule "model"]
+	path = model
+	url = http://gitlab.com/Shunsuke16/hair_seg.git
