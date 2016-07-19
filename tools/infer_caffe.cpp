@@ -35,6 +35,7 @@ class TCPServer
 public:
     TCPServer(const std::string &address, const short port = 0)
     {
+        address_ = address;
         port_ = port;
         // create socket first
         std::cout << "Creating Socket..." << std::endl;
@@ -77,7 +78,7 @@ public:
     {
         listen(fd_,5);
         clilen_ = sizeof(cliaddr_);
-        std::cout << "Wainting Port: " <<  port_ << "..." << std::endl;
+        std::cout << "Wainting IP: " << address_ << " Port: " <<  port_ << "..." << std::endl;
         
         clock_t start_ = clock();
         do{
@@ -136,6 +137,7 @@ private:
     struct sockaddr_in servaddr_;
     socklen_t clilen_;
     short port_;
+    std::string address_;
 };
 
 class SegNet
