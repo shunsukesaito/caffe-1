@@ -24,8 +24,8 @@
 #include <caffe/caffe.hpp>
 #include <opencv2/opencv.hpp>
 
-#define DEFAULT_DEPLOY_PATH "deloy.prototxt"
-#define DEFAULT_WEIGHT_PATH "weight.caffemodel"
+#define DEFAULT_DEPLOY_PATH "model/deloy.prototxt"
+#define DEFAULT_WEIGHT_PATH "model/weight.caffemodel"
 using namespace caffe;
 using namespace cv;
 using namespace std;
